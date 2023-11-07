@@ -43,17 +43,17 @@ void CheckMark::keyPressEvent(QKeyEvent *event)
     }
     else if(event->key() == Qt::Key_Space)
     {
-        if(gameView->checkSeatData(rowIndex,colIndex)==0)
+        if(gameView->checkCardData(rowIndex,colIndex)==0)
         {
-            gameView->setSeatData(rowIndex,colIndex,1);
+            gameView->setCardData(rowIndex,colIndex,1);
             CurrText->setDefaultTextColor(Qt::green);
-            CurrText->setPlainText("This Seat has been Booked sucessfully");
-            gameView->writeSeatsData();
+            CurrText->setPlainText("This Card has been Booked sucessfully");
+            gameView->writeCardsData();
         }
         else
         {
             CurrText->setDefaultTextColor(Qt::red);
-            CurrText->setPlainText("This Seat is already Booked");
+            CurrText->setPlainText("This Card is already Booked");
         }
     }
 
@@ -66,7 +66,7 @@ void CheckMark::keyPressEvent(QKeyEvent *event)
         scene()->removeItem(colliding_items[i]);
 
         CurrText->setDefaultTextColor(Qt::blue);
-        CurrText->setPlainText("Seat: " + seatRowNames[rowIndex]+QString::number(colIndex+1));
+        CurrText->setPlainText("Card: " + cardRowNames[rowIndex]+QString::number(colIndex+1));
 
     }
     if(colliding_items.size()>0)

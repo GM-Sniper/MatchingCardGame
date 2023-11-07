@@ -5,6 +5,6 @@
         <file>checkmark.png</file>
     </qresource>
     <qresource prefix="/texts">
-        <file>seatsData.txt</file>
+        <file>cardsData.txt</file>
     </qresource>
 </RCC>

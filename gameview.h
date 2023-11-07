@@ -10,17 +10,17 @@ class CheckMark;
 class GameView
 {
 private:
-    int seatsData[sRows][sCols];
-    QGraphicsPixmapItem seatsImages[sRows][sCols];
-    QGraphicsTextItem* currSeatText;
+    int cardsData[sRows][sCols];
+    QGraphicsPixmapItem cardsImages[sRows][sCols];
+    QGraphicsTextItem* currCardText;
 
 public:
     GameView();
-    int checkSeatData(int RowIndex, int ColIndex);
-    void setSeatData(int RowIndex, int ColIndex, int data);
-    void readDataSeats();
-    void setSeatsImages();
-    void writeSeatsData();
+    int checkCardData(int RowIndex, int ColIndex);
+    void setCardData(int RowIndex, int ColIndex, int data);
+    void readDataCards();
+    void setCardsImages();
+    void writeCardsData();
     QGraphicsScene* scene;
     QGraphicsView* view;
     CheckMark* checkmark;
