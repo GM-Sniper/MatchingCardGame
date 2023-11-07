@@ -1,5 +1,5 @@
 #include "checkmark.h"
-#include "bookingview.h"
+#include "gameview.h"
 #include <QKeyEvent>
 #include <QGraphicsScene>
 #include <QList>
@@ -7,7 +7,7 @@
 #include <QGraphicsView>
 #include "Users.h"
 
-CheckMark::CheckMark(BookingView* inBooking, QGraphicsTextItem* inCurrText)
+CheckMark::CheckMark(GameView* inGame, QGraphicsTextItem* inCurrText)
 {
     QPixmap checkmark1(":/images/checkmark.png");
     checkmark1 = checkmark1.scaledToWidth(40);
@@ -16,7 +16,7 @@ CheckMark::CheckMark(BookingView* inBooking, QGraphicsTextItem* inCurrText)
     rowIndex=0;
     colIndex=-1;
     previousItem=nullptr;
-    bookingview=inBooking;
+    gameView=inGame;
     CurrText=inCurrText;
 }
 void CheckMark::keyPressEvent(QKeyEvent *event)
@@ -43,12 +43,12 @@ void CheckMark::keyPressEvent(QKeyEvent *event)
     }
     else if(event->key() == Qt::Key_Space)
     {
-        if(bookingview->checkSeatData(rowIndex,colIndex)==0)
+        if(gameView->checkSeatData(rowIndex,colIndex)==0)
         {
-            bookingview->setSeatData(rowIndex,colIndex,1);
+            gameView->setSeatData(rowIndex,colIndex,1);
             CurrText->setDefaultTextColor(Qt::green);
             CurrText->setPlainText("This Seat has been Booked sucessfully");
-            bookingview->writeSeatsData();
+            gameView->writeSeatsData();
         }
         else
         {
@@ -73,7 +73,7 @@ void CheckMark::keyPressEvent(QKeyEvent *event)
         {
             if(previousItem!=nullptr)
             {   //previousItem=(QGraphicsPixmapItem*)colliding_items[0];
-                bookingview->scene->addItem(previousItem);
+                gameView->scene->addItem(previousItem);
             }
             previousItem=(QGraphicsPixmapItem*)colliding_items[0];
         }

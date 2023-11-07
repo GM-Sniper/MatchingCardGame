@@ -4,17 +4,17 @@
 #include <QGraphicsPixmapItem>
 #include <QGraphicsTextItem>
 
-class BookingView;
+class GameView;
 
 class CheckMark: public QGraphicsPixmapItem, public QObject
 {
 
 public:
-    CheckMark(BookingView* inBooking, QGraphicsTextItem* inCurrText);
+    CheckMark(GameView* inGame, QGraphicsTextItem* inCurrText);
 
 private:
 
-    BookingView* bookingview;
+    GameView* gameView;
     QGraphicsTextItem* CurrText;
     int rowIndex, colIndex;
     QGraphicsPixmapItem* previousItem;

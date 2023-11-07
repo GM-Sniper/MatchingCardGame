@@ -97,27 +97,6 @@
      <string>Login</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="pushButtonRegister">
-    <property name="geometry">
-     <rect>
-      <x>251</x>
-      <y>230</y>
-      <width>131</width>
-      <height>31</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <pointsize>10</pointsize>
-     </font>
-    </property>
-    <property name="cursor">
-     <cursorShape>PointingHandCursor</cursorShape>
-    </property>
-    <property name="text">
-     <string>Register</string>
-    </property>
-   </widget>
    <widget class="QLabel" name="labelError">
     <property name="geometry">
      <rect>

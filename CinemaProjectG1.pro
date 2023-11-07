@@ -10,26 +10,21 @@ CONFIG += c++17
 
 SOURCES += \
     Users.cpp \
-    bookingview.cpp \
+    gameView.cpp \
     checkmark.cpp \
     main.cpp \
     mainwindow.cpp \
-    registerwindow.cpp \
-    welcomewindow.cpp
 
 HEADERS += \
     Exceptions.h \
     Users.h \
-    bookingview.h \
+    gameView.h \
     checkmark.h \
     mainwindow.h \
-    registerwindow.h \
     welcomewindow.h
 
 FORMS += \
     mainwindow.ui \
-    registerwindow.ui \
-    welcomewindow.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

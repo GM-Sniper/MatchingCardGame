@@ -1,10 +1,10 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "Users.h"
-#include "WelcomeWindow.h"
-#include "registerwindow.h"
 #include <stdexcept>
 #include "Exceptions.h"
+#include "gameview.h"
+
 #include<QMessageBox>
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -30,8 +30,8 @@ void MainWindow::on_pushButtonLogin_clicked()
         if(username_entered==usernames[i]&& password_entered==password[i])
         {
             hide();
-            WelcomeWindow* welcomeWindow= new WelcomeWindow(username_entered,age[i],this);
-            welcomeWindow->show();
+            GameView* game= new GameView;
+            game->view->show();
             break;
         }
 
@@ -58,12 +58,3 @@ void MainWindow::on_pushButtonLogin_clicked()
         QMessageBox::warning(this,tr("Error!"),tr(e.what()));
     }
 }
-
-
-void MainWindow::on_pushButtonRegister_clicked()
-{
-    hide();
-    RegisterWindow* registerWindow= new RegisterWindow(this);
-    registerWindow->show();
-}
-

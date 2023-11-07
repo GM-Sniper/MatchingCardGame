@@ -19,7 +19,6 @@ private slots:
 
     void on_pushButtonLogin_clicked();
 
-    void on_pushButtonRegister_clicked();
 
 private:
     Ui::MainWindow *ui;
