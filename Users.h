@@ -11,7 +11,7 @@ extern int usersCount;
 #define sCols 6
 
 
-extern QString seatRowNames[sRows];
+extern QString cardRowNames[sRows];
 
 
 #endif // USERS_H
