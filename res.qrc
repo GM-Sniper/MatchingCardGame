@@ -3,7 +3,6 @@
         <file>available.PNG</file>
         <file>booked.PNG</file>
         <file>checkmark.png</file>
-        <file>welcome.jpg</file>
     </qresource>
     <qresource prefix="/texts">
         <file>seatsData.txt</file>
