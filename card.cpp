@@ -11,6 +11,10 @@ card::card(int id, const QString& imagePath) : id(id), state(NotFlipped) {
 card::card(int id) : id(id), state(NotFlipped) {
 }
 
+void card::setState(State s)
+{
+    state=s;
+}
 
 int card::getId() const {
     return id;

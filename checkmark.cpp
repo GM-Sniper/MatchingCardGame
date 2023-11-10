@@ -5,6 +5,7 @@
 #include <QList>
 #include <QGraphicsItem>
 #include <QGraphicsView>
+#include "card.h"
 #include "Users.h"
 
 CheckMark::CheckMark(GameView* inGame, QGraphicsTextItem* inCurrText)
@@ -18,6 +19,7 @@ CheckMark::CheckMark(GameView* inGame, QGraphicsTextItem* inCurrText)
     previousItem=nullptr;
     gameView=inGame;
     CurrText=inCurrText;
+
 }
 void CheckMark::keyPressEvent(QKeyEvent *event)
 {
@@ -43,18 +45,27 @@ void CheckMark::keyPressEvent(QKeyEvent *event)
     }
     else if(event->key() == Qt::Key_Space)
     {
-        if(gameView->checkCardData(rowIndex,colIndex)==0)
+        gameView->changeCardState(rowIndex,colIndex);
+        openingCounter++;
+
+        if (openingCounter%2==0)
         {
-            gameView->setCardData(rowIndex,colIndex,1);
             CurrText->setDefaultTextColor(Qt::green);
             CurrText->setPlainText("This Card has been Booked sucessfully");
-            gameView->writeCardsData();
+
+            //gameView->writeCardsData();
         }
         else
         {
             CurrText->setDefaultTextColor(Qt::red);
             CurrText->setPlainText("This Card is already Booked");
         }
+    }
+    else if(event->key() == Qt::Key_S)
+    {
+        gameView->FlipAllCards();
+        gameView->setCardHidden();
+
     }
 
 
@@ -71,13 +82,13 @@ void CheckMark::keyPressEvent(QKeyEvent *event)
     }
     if(colliding_items.size()>0)
         {
-            if(previousItem!=nullptr && previousCard!=nullptr)
+            if(previousItem!=nullptr)
             {   //previousItem=(QGraphicsPixmapItem*)colliding_items[0];
                 gameView->scene->addItem(previousItem);
-                gameView->scene->addItem(previousCard);
+                //gameView->scene->addItem(previousCard);
             }
             previousItem=(QGraphicsPixmapItem*)colliding_items[0];
-            previousCard=(QGraphicsPixmapItem*)colliding_items[1];
+            //previousCard=(QGraphicsPixmapItem*)colliding_items[1];
         }
 
 }

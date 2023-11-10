@@ -6,6 +6,7 @@
 #include <QGraphicsEllipseItem>
 #include <QGraphicsTextItem>
 #include <QGraphicsPixmapItem>
+#include "card.h"
 #include "checkmark.h"
 
 GameView::GameView()
@@ -20,6 +21,7 @@ GameView::GameView()
     view->show();
     readDataCards();
     setCardsImages();
+    initalizeCard();
     setCardHidden();
     currCardText =new QGraphicsTextItem;
     currCardText->setFont(QFont("times", 16));
@@ -34,6 +36,16 @@ GameView::GameView()
     scene->addItem(checkmark);
 
 
+
+}
+void GameView::initalizeCard()
+{    for(int i=0; i<sRows;i++)
+    {
+        for (int j=0;j<sCols;j++)
+        {
+            Cards[i][j]= new card(checkCardData(i,j));
+        }
+    }
 
 }
 
@@ -78,7 +90,8 @@ void GameView::setCardsImages()
     QPixmap Image1(":/images/Images/BB8.png");
     Image1 = Image1.scaledToWidth(40);
     Image1 = Image1.scaledToHeight(40);
-    QPixmap Image2(":/images/crab.png");
+
+    QPixmap Image2(":/images/Images/crab.png");
     Image2 = Image2.scaledToWidth(40);
     Image2 = Image2.scaledToHeight(40);
 
@@ -138,7 +151,7 @@ void GameView::setCardsImages()
     Image16 = Image16.scaledToWidth(40);
     Image16 = Image16.scaledToHeight(40);
 
-    QPixmap Image17("qrc:/images/Images/tropical-fish.png");
+    QPixmap Image17(":/images/Images/tropical-fish.png");
     Image17 = Image17.scaledToWidth(40);
     Image17 = Image17.scaledToHeight(40);
 
@@ -223,20 +236,74 @@ void GameView:: writeCardsData()
 void GameView::setCardHidden()
 {
     QPixmap flippedCard(":/images/available.PNG");
-    flippedCard = flippedCard.scaledToWidth(42);
-    flippedCard = flippedCard.scaledToHeight(42);
+    flippedCard = flippedCard.scaledToWidth(45);
+    flippedCard = flippedCard.scaledToHeight(45);
     int xPos=100, yPos=50, xAdd=50,yAdd=50, currX=100;
     for(int i=0; i<sRows;i++)
     {
         for (int j=0;j<sCols;j++)
         {
-            flippedCards[i][j].setPixmap(flippedCard);
-            flippedCards[i][j].setPos(xPos,yPos);
-            scene->addItem(&flippedCards[i][j]);
+            if(Cards [i][j]->getState()== card::NotFlipped)
+            {
+                flippedCards[i][j].setPixmap(flippedCard);
+                flippedCards[i][j].setPos(xPos,yPos);
+                scene->addItem(&flippedCards[i][j]);
+                scene->removeItem(&cardsImages[i][j]);
+            }
+            else if(Cards [i][j]->getState()== card::Flipped)
+            {
+                scene->removeItem(&flippedCards[i][j]);
+                scene->addItem(&cardsImages[i][j]);
+            }
             xPos+=xAdd;
 
         }
         xPos=currX;
         yPos+=yAdd;
     }
+}
+void GameView::FlipAllCards()
+{
+    for(int i=0; i<sRows;i++)
+    {
+        for (int j=0;j<sCols;j++)
+        {
+            Cards[i][j]->flip();
+        }
+    }
+}
+card* GameView::ReadCardState(int rowIndex, int colIndex)
+{
+    return Cards[rowIndex][colIndex];
+}
+void GameView::changeCardState(int rowIndex, int colIndex)
+{   /*Cards[rowIndex][colIndex]->flip();
+
+    if(Cards [rowIndex][colIndex]->getState()== card::Flipped)
+    {
+        scene->removeItem(&flippedCards[rowIndex][colIndex]);
+        scene->addItem(&cardsImages[rowIndex][colIndex]);
+
+    }
+    else if(Cards [rowIndex][colIndex]->getState()== card::NotFlipped)
+    {
+        scene->removeItem(&cardsImages[rowIndex][colIndex]);
+        scene->addItem(&flippedCards[rowIndex][colIndex]);
+
+    }
+    */
+    Cards[rowIndex][colIndex]->flip();
+
+    if (Cards[rowIndex][colIndex]->getState() == card::Flipped) {
+        scene->removeItem(&flippedCards[rowIndex][colIndex]);
+        if (!scene->items().contains(&cardsImages[rowIndex][colIndex])) {
+            scene->addItem(&cardsImages[rowIndex][colIndex]);
+        }
+    } else if (Cards[rowIndex][colIndex]->getState() == card::NotFlipped) {
+        scene->removeItem(&cardsImages[rowIndex][colIndex]);
+        if (!scene->items().contains(&flippedCards[rowIndex][colIndex])) {
+            scene->addItem(&flippedCards[rowIndex][colIndex]);
+        }
+    }
+
 }

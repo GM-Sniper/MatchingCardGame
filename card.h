@@ -16,6 +16,7 @@ card(int id, const QString& imagePath);
 // Getter functions
 int getId() const;
 State getState() const;
+void setState(State);
 
 // Function to flip the card
 void flip();
