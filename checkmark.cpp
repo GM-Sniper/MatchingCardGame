@@ -9,10 +9,10 @@
 
 CheckMark::CheckMark(GameView* inGame, QGraphicsTextItem* inCurrText)
 {
-    QPixmap checkmark1(":/images/checkmark.png");
-    checkmark1 = checkmark1.scaledToWidth(40);
-    checkmark1 = checkmark1.scaledToHeight(40);
-    setPixmap(checkmark1);
+    QPixmap clicker(":/images/checkmark.png");
+    clicker = clicker.scaledToWidth(40);
+    clicker = clicker.scaledToHeight(40);
+    setPixmap(clicker);
     rowIndex=0;
     colIndex=-1;
     previousItem=nullptr;
@@ -71,11 +71,13 @@ void CheckMark::keyPressEvent(QKeyEvent *event)
     }
     if(colliding_items.size()>0)
         {
-            if(previousItem!=nullptr)
+            if(previousItem!=nullptr && previousCard!=nullptr)
             {   //previousItem=(QGraphicsPixmapItem*)colliding_items[0];
                 gameView->scene->addItem(previousItem);
+                gameView->scene->addItem(previousCard);
             }
             previousItem=(QGraphicsPixmapItem*)colliding_items[0];
+            previousCard=(QGraphicsPixmapItem*)colliding_items[1];
         }
 
 }

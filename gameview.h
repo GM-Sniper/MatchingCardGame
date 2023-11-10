@@ -6,11 +6,12 @@
 #include <QGraphicsPixmapItem>
 #include "Users.h"
 class CheckMark;
-
+class card;
 class GameView
 {
 private:
     int cardsData[sRows][sCols];
+    QGraphicsPixmapItem flippedCards[sRows][sCols];
     QGraphicsPixmapItem cardsImages[sRows][sCols];
     QGraphicsTextItem* currCardText;
 
@@ -21,6 +22,7 @@ public:
     void readDataCards();
     void setCardsImages();
     void writeCardsData();
+    void setCardHidden();
     QGraphicsScene* scene;
     QGraphicsView* view;
     CheckMark* checkmark;

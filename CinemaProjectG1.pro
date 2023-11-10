@@ -10,6 +10,7 @@ CONFIG += c++17
 
 SOURCES += \
     Users.cpp \
+    card.cpp \
     gameView.cpp \
     checkmark.cpp \
     main.cpp \
@@ -18,6 +19,7 @@ SOURCES += \
 HEADERS += \
     Exceptions.h \
     Users.h \
+    card.h \
     gameView.h \
     checkmark.h \
     mainwindow.h \

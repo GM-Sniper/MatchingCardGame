@@ -3,8 +3,29 @@
         <file>available.PNG</file>
         <file>booked.PNG</file>
         <file>checkmark.png</file>
+        <file>Images/BB8.png</file>
+        <file>Images/crab.png</file>
+        <file>Images/Dragon Ball.png</file>
+        <file>Images/drone.png</file>
+        <file>Images/flamingo.png</file>
+        <file>Images/Gem.png</file>
+        <file>Images/guitar.png</file>
+        <file>Images/jellyfish.png</file>
+        <file>Images/kombucha.png</file>
+        <file>Images/nanotechnology.png</file>
+        <file>Images/pineapple.png</file>
+        <file>Images/robotics.png</file>
+        <file>Images/shaved-ice.png</file>
+        <file>Images/suitcase.png</file>
+        <file>Images/sunset.png</file>
+        <file>Images/tea.png</file>
+        <file>Images/technology (1).png</file>
+        <file>Images/technology.png</file>
+        <file>Images/tropical-fish.png</file>
+        <file>Images/watermelon.png</file>
     </qresource>
     <qresource prefix="/texts">
         <file>cardsData.txt</file>
+        <file>CardsData (2).txt</file>
     </qresource>
 </RCC>

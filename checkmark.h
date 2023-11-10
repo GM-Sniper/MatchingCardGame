@@ -18,6 +18,7 @@ private:
     QGraphicsTextItem* CurrText;
     int rowIndex, colIndex;
     QGraphicsPixmapItem* previousItem;
+    QGraphicsPixmapItem* previousCard;
 public slots:
     void keyPressEvent(QKeyEvent * event);
 };
