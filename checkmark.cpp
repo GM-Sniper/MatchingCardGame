@@ -44,21 +44,23 @@ void CheckMark::keyPressEvent(QKeyEvent *event)
         rowIndex++;}
     }
     else if(event->key() == Qt::Key_Space)
-    {
+    {   pointerRead=this;
+        scene()->removeItem(pointerRead);
         gameView->changeCardState(rowIndex,colIndex);
+
         openingCounter++;
 
         if (openingCounter%2==0)
         {
-            CurrText->setDefaultTextColor(Qt::green);
-            CurrText->setPlainText("This Card has been Booked sucessfully");
+            //CurrText->setDefaultTextColor(Qt::green);
+            //CurrText->setPlainText("This Card has been Booked sucessfully");
 
             //gameView->writeCardsData();
         }
         else
         {
-            CurrText->setDefaultTextColor(Qt::red);
-            CurrText->setPlainText("This Card is already Booked");
+            //CurrText->setDefaultTextColor(Qt::red);
+            //->setPlainText("This Card is already Booked");
         }
     }
     else if(event->key() == Qt::Key_S)
