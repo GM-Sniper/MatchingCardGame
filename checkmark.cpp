@@ -1,6 +1,8 @@
 #include "checkmark.h"
 #include "gameview.h"
 #include <QKeyEvent>
+#include <QString>
+
 #include <QGraphicsScene>
 #include <QList>
 #include <QGraphicsItem>
@@ -8,7 +10,7 @@
 #include "card.h"
 #include "Users.h"
 
-CheckMark::CheckMark(GameView* inGame, QGraphicsTextItem* inCurrText)
+CheckMark::CheckMark(GameView* inGame, QGraphicsTextItem* inCurrText, QGraphicsTextItem* currScoreText)
 {
     QPixmap clicker(":/images/checkmark.png");
     clicker = clicker.scaledToWidth(40);
@@ -19,7 +21,14 @@ CheckMark::CheckMark(GameView* inGame, QGraphicsTextItem* inCurrText)
     previousItem=nullptr;
     gameView=inGame;
     CurrText=inCurrText;
+    this->currScoreText=currScoreText;
+    score = 0;
+    openingCounter = 0;
     setZValue(1);
+    currScoreText->setDefaultTextColor(Qt::green);
+    currScoreText->setPlainText("Score: "+ QString::number(0));
+    CurrText->setDefaultTextColor(Qt::red);
+    CurrText->setPlainText("Opennings: "+QString::number(0));
 
 }
 void CheckMark::keyPressEvent(QKeyEvent *event)
@@ -48,9 +57,24 @@ void CheckMark::keyPressEvent(QKeyEvent *event)
     {
 
         // Check for a match
-        gameView->checkForMatch(rowIndex, colIndex);
+        bool match = gameView->checkForMatch(rowIndex, colIndex);
         previousItem=nullptr;
+        openingCounter++;
 
+        if (openingCounter%2==0 && match)
+        {
+            score++;
+            currScoreText->setDefaultTextColor(Qt::green);
+            currScoreText->setPlainText("Score: "+ QString::number(score));
+
+            //gameView->writeCardsData();
+        }
+        else
+        {
+
+            CurrText->setDefaultTextColor(Qt::red);
+            CurrText->setPlainText("Opennings: "+QString::number(openingCounter/2));
+        }
 //        gameView->setCardHidden();
 
     }

@@ -10,12 +10,13 @@ class CheckMark: public QGraphicsPixmapItem, public QObject
 {
 
 public:
-    CheckMark(GameView* inGame, QGraphicsTextItem* inCurrText);
+    CheckMark(GameView* inGame, QGraphicsTextItem* inCurrText,QGraphicsTextItem* currScoreText);
 
 private:
 
     GameView* gameView;
     QGraphicsTextItem* CurrText;
+    QGraphicsTextItem* currScoreText;
     int rowIndex, colIndex;
     QGraphicsPixmapItem* previousItem;
     QGraphicsPixmapItem* pointerRead;

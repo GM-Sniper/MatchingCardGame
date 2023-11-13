@@ -33,6 +33,10 @@ void MainWindow::on_pushButtonLogin_clicked()
             GameView* game= new GameView();
             game->view->show();
             break;
+        }else{
+            ui->labelError->setVisible(true);
+            ui->labelError->setText("Wrong Username or Password");
+
         }
 
     }
