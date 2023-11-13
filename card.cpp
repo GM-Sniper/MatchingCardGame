@@ -1,36 +1,56 @@
+// card.cpp
 #include "card.h"
 
-card::card() : id(-1), state(NotFlipped) {
-    // Default constructor with invalid id
-}
-
-card::card(int id, const QString& imagePath) : id(id), state(NotFlipped) {
-    // Constructor with id and image path
-    image = QPixmap(imagePath);
-}
-card::card(int id) : id(id), state(NotFlipped) {
-}
-
-void card::setState(State s)
+card::card(int id, const QString &imagePath) : id(id), state(false)
 {
-    state=s;
+    image = QPixmap(imagePath);
+    image = image.scaled(QSize(40, 40), Qt::KeepAspectRatio, Qt::FastTransformation);
+//    image.scaledToWidth(40);
 }
 
-int card::getId() const {
+int card::getId() const
+{
     return id;
 }
 
-card::State card::getState() const {
+bool card::getState() const
+{
     return state;
 }
-
-void card::flip() {
-    // Toggle the state of the card
-    state = (state == Flipped) ? NotFlipped : Flipped;
+void card::setState(bool status)
+{
+    state = status;
 }
 
-bool card::isMatch(const card& other) const
+void card::flip()
+{
+    // Toggle the state of the card
+    if (!state) {
+        state = true;
+    } else {
+        state = false;
+    }
+}
+
+bool card::isMatch(const card &other) const
 {
     // Check if two cards have the same id
     return (id == other.id);
+}
+
+void card::setPixmap(const QPixmap &pixmap)
+{
+    image = pixmap;
+}
+
+QPixmap card::getPixmap() const
+{
+    return image;
+}
+
+bool card::operator==(const card &other) const
+{
+    // Check if two cards have the same id
+
+    return (this->id == other.id);
 }

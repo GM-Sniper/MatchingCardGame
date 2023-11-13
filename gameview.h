@@ -5,24 +5,30 @@
 #include <QGraphicsView>
 #include <QGraphicsPixmapItem>
 #include "Users.h"
+#include "card.h"
+
 class CheckMark;
-class card;
+//class card;
 class GameView
 {
 private:
     int cardsData[sRows][sCols];
+    int lastOpenedRowIndex;
+    int lastOpenedColIndex;
     QGraphicsPixmapItem flippedCards[sRows][sCols];
-    card* Cards[sRows][sCols];
+    card *Cards[sRows][sCols];
     QGraphicsPixmapItem cardsImages[sRows][sCols];
     QGraphicsTextItem* currCardText;
 
 public:
     GameView();
+
+//    explicit GameView(card (*cards)[6]);
+
     int checkCardData(int RowIndex, int ColIndex);
-    void setCardData(int RowIndex, int ColIndex, int data);
     void readDataCards();
+    void checkForMatch(int rowIndex,int colIndex);
     void setCardsImages();
-    void writeCardsData();
     QGraphicsScene* scene;
     QGraphicsView* view;
     void setCardHidden();

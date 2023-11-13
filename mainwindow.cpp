@@ -30,7 +30,7 @@ void MainWindow::on_pushButtonLogin_clicked()
         if(username_entered==usernames[i]&& password_entered==password[i])
         {
             hide();
-            GameView* game= new GameView;
+            GameView* game= new GameView();
             game->view->show();
             break;
         }

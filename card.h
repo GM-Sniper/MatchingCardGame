@@ -1,33 +1,32 @@
+// card.h
 #ifndef CARD_H
 #define CARD_H
+
 #include <QPixmap>
-#include <QObject>
 
-class card{
+class card
+{
 public:
-// Enum to represent the state of the card
-enum State {Flipped,NotFlipped};
+    enum State { NotFlipped, Flipped };
 
-// Constructors
-card();
-card(int id);
-card(int id, const QString& imagePath);
-
-// Getter functions
-int getId() const;
-State getState() const;
-void setState(State);
-
-// Function to flip the card
-void flip();
-
-// Function to check if two cards match
-bool isMatch(const card& other) const;
+    card(int id, const QString &imagePath);
+    int getId() const;
+//    State getState() const;
+    bool getState() const;
+    void setState(bool status);
+//    void setState(card::State status);
+    void flip();
+    bool isMatch(const card &other) const;
+    void setPixmap(const QPixmap &pixmap);
+    QPixmap getPixmap() const;
+    // Overload equality operator
+    bool operator==(const card &other) const;
 
 private:
-int id;          // Identifier for matching pairs
-State state;     // Current state of the card (flipped or not)
-QPixmap image;   // Image/icon for the card
+    int id;
+    bool state;
+//    State state;
+    QPixmap image;
 };
 
 #endif // CARD_H

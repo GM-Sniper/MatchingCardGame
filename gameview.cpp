@@ -1,6 +1,7 @@
 #include "gameview.h"
 #include <QString>
 #include <QFile>
+#include <QTimer>
 #include <QTextStream>
 #include <QGraphicsRectItem>
 #include <QGraphicsEllipseItem>
@@ -9,297 +10,283 @@
 #include "card.h"
 #include "checkmark.h"
 
-GameView::GameView()
-{
+GameView::GameView() :lastOpenedRowIndex(-1),lastOpenedColIndex(-1) {
     scene = new QGraphicsScene;
-    view= new QGraphicsView;
+    view = new QGraphicsView;
     view->setFixedSize(480, 500);
     scene->setSceneRect(0, 0, 480, 500);
     view->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     view->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     view->setScene(scene);
     view->show();
-    readDataCards();
-    setCardsImages();
+//        readDataCards();
     initalizeCard();
+//    setCardsImages();  // Uncomment this line
     setCardHidden();
-    currCardText =new QGraphicsTextItem;
+    currCardText = new QGraphicsTextItem;
     currCardText->setFont(QFont("times", 16));
     currCardText->setDefaultTextColor(Qt::blue);
     currCardText->setPos(20, 400);
     scene->addItem(currCardText);
 
-    checkmark=new CheckMark(this,currCardText);
-    checkmark->setPos(50,50);
+    checkmark = new CheckMark(this, currCardText);
+    checkmark->setPos(50, 50);
     checkmark->setFlag(QGraphicsItem::ItemIsFocusable);
     checkmark->setFocus();
     scene->addItem(checkmark);
-
-
-
-}
-void GameView::initalizeCard()
-{    for(int i=0; i<sRows;i++)
-    {
-        for (int j=0;j<sCols;j++)
-        {
-            Cards[i][j]= new card(checkCardData(i,j));
-        }
-    }
-
 }
 
-void GameView::setCardData(int RowIndex, int ColIndex, int data)
-{
-    cardsData[RowIndex][ColIndex]=data;
-    if (data == 0)
-    {
-        QPixmap availablePixmap(":/images/available.PNG");
-        availablePixmap = availablePixmap.scaledToWidth(40);
-        availablePixmap = availablePixmap.scaledToHeight(40);
-        cardsImages[RowIndex][ColIndex].setPixmap(availablePixmap);
-    }
-    else
-    {
-        QPixmap bookedPixmap(":/images/booked.PNG");
-        bookedPixmap = bookedPixmap.scaledToWidth(40);
-        bookedPixmap = bookedPixmap.scaledToHeight(40);
-        cardsImages[RowIndex][ColIndex].setPixmap(bookedPixmap);
+void GameView::initalizeCard() {
+    // Use a vector to store cards
+    std::vector <card*> allCards;
+
+    // Create pairs of cards with the same image
+    for (int i = 0; i < 18; i++) {
+        QString imagePath = ":/images/Images/image" + QString::number(i + 1) + ".png";
+        card *newCard1 = new card(i, imagePath);
+        card *newCard2 = new card(i, imagePath);
+
+        allCards.push_back(newCard1);
+        allCards.push_back(newCard2);
     }
 
-}
+    // Shuffle the vector to randomize card positions
+    std::random_shuffle(allCards.begin(), allCards.end());
 
-void GameView::readDataCards()
-{
-    QFile File(":/texts/CardsData (2).txt");
-    File.open(QIODevice::ReadOnly);
-    QTextStream stream(&File);
+    // Assign cards to the grid
+    int index = 0;
+    int xPos = 100, yPos = 50, xAdd = 50, yAdd = 50, currX = 100;
 
-    QString input;
-    for(int i=0; i<sRows;i++)
-    {
-        for (int j=0;j<sCols;j++)
-        {   stream>>input;
-            cardsData[i][j]=input.toInt();
-        }
-    }
-    File.close();
-}
-void GameView::setCardsImages()
-{
-    QPixmap Image1(":/images/Images/BB8.png");
-    Image1 = Image1.scaledToWidth(40);
-    Image1 = Image1.scaledToHeight(40);
+    for (int i = 0; i < sRows; i++) {
+        for (int j = 0; j < sCols; j++) {
+            Cards[i][j] = allCards[index++];
+            Cards[i][j]->setState(false);
+            cardsImages[i][j].setPixmap(Cards[i][j]->getPixmap());
+            cardsImages[i][j].setPos(xPos, yPos);
+//            qDebug() << "Card [" << i << "][" << j << "] initialized with ID: " << Cards[i][j]->getId();
 
-    QPixmap Image2(":/images/Images/crab.png");
-    Image2 = Image2.scaledToWidth(40);
-    Image2 = Image2.scaledToHeight(40);
-
-    QPixmap Image3(":/images/Images/Dragon Ball.png");
-    Image3 = Image3.scaledToWidth(40);
-    Image3 = Image3.scaledToHeight(40);
-
-    QPixmap Image4(":/images/Images/drone.png");
-    Image4 = Image4.scaledToWidth(40);
-    Image4 = Image4.scaledToHeight(40);
-
-    QPixmap Image5(":/images/Images/flamingo.png");
-    Image5 = Image5.scaledToWidth(40);
-    Image5 = Image5.scaledToHeight(40);
-
-    QPixmap Image6(":/images/Images/guitar.png");
-    Image6 = Image6.scaledToWidth(40);
-    Image6 = Image6.scaledToHeight(40);
-
-    QPixmap Image7(":/images/Images/Gem.png");
-    Image7 = Image7.scaledToWidth(40);
-    Image7 = Image7.scaledToHeight(40);
-
-    QPixmap Image8(":/images/Images/jellyfish.png");
-    Image8 = Image8.scaledToWidth(40);
-    Image8 = Image8.scaledToHeight(40);
-
-    QPixmap Image9(":/images/Images/kombucha.png");
-    Image9 = Image9.scaledToWidth(40);
-    Image9 = Image9.scaledToHeight(40);
-
-    QPixmap Image10(":/images/Images/nanotechnology.png");
-    Image10 = Image10.scaledToWidth(40);
-    Image10 = Image10.scaledToHeight(40);
-
-    QPixmap Image11(":/images/Images/shaved-ice.png");
-    Image11 = Image11.scaledToWidth(40);
-    Image11 = Image11.scaledToHeight(40);
-
-    QPixmap Image12(":/images/Images/suitcase.png");
-    Image12 = Image12.scaledToWidth(40);
-    Image12 = Image12.scaledToHeight(40);
-
-    QPixmap Image13(":/images/Images/tea.png");
-    Image13 = Image13.scaledToWidth(40);
-    Image13 = Image13.scaledToHeight(40);
-
-    QPixmap Image14(":/images/Images/sunset.png");
-    Image14 = Image14.scaledToWidth(40);
-    Image14 = Image14.scaledToHeight(40);
-
-    QPixmap Image15(":/images/Images/technology (1).png");
-    Image15 = Image15.scaledToWidth(40);
-    Image15 = Image15.scaledToHeight(40);
-
-    QPixmap Image16(":/images/Images/technology.png");
-    Image16 = Image16.scaledToWidth(40);
-    Image16 = Image16.scaledToHeight(40);
-
-    QPixmap Image17(":/images/Images/tropical-fish.png");
-    Image17 = Image17.scaledToWidth(40);
-    Image17 = Image17.scaledToHeight(40);
-
-    QPixmap Image18(":/images/Images/watermelon.png");
-    Image18 = Image18.scaledToWidth(40);
-    Image18 = Image18.scaledToHeight(40);
-
-    int xPos=100, yPos=50, xAdd=50,yAdd=50, currX=100;
-    for(int i=0; i<sRows;i++)
-    {
-        for (int j=0;j<sCols;j++)
-        {
-            if (cardsData[i][j] == 1) {
-                cardsImages[i][j].setPixmap(Image1);
-            } else if (cardsData[i][j] == 2) {
-                cardsImages[i][j].setPixmap(Image2);
-            } else if (cardsData[i][j] == 3) {
-                cardsImages[i][j].setPixmap(Image3);
-            } else if (cardsData[i][j] == 4) {
-                cardsImages[i][j].setPixmap(Image4);
-            } else if (cardsData[i][j] == 5) {
-                cardsImages[i][j].setPixmap(Image5);
-            } else if (cardsData[i][j] == 6) {
-                cardsImages[i][j].setPixmap(Image6);
-            } else if (cardsData[i][j] == 7) {
-                cardsImages[i][j].setPixmap(Image7);
-            } else if (cardsData[i][j] == 8) {
-                cardsImages[i][j].setPixmap(Image8);
-            } else if (cardsData[i][j] == 9) {
-                cardsImages[i][j].setPixmap(Image9);
-            } else if (cardsData[i][j] == 10) {
-                cardsImages[i][j].setPixmap(Image10);
-            } else if (cardsData[i][j] == 11) {
-                cardsImages[i][j].setPixmap(Image11);
-            } else if (cardsData[i][j] == 12) {
-                cardsImages[i][j].setPixmap(Image12);
-            } else if (cardsData[i][j] == 13) {
-                cardsImages[i][j].setPixmap(Image13);
-            } else if (cardsData[i][j] == 14) {
-                cardsImages[i][j].setPixmap(Image14);
-            } else if (cardsData[i][j] == 15) {
-                cardsImages[i][j].setPixmap(Image15);
-            } else if (cardsData[i][j] == 16) {
-                cardsImages[i][j].setPixmap(Image16);
-            } else if (cardsData[i][j] == 17) {
-                cardsImages[i][j].setPixmap(Image17);
-            } else if (cardsData[i][j] == 18) {
-                cardsImages[i][j].setPixmap(Image18);
-            }
-            cardsImages[i][j].setPos(xPos,yPos);
             scene->addItem(&cardsImages[i][j]);
-            xPos+=xAdd;
-
+            xPos += xAdd;
         }
-        xPos=currX;
-        yPos+=yAdd;
+        xPos = currX;
+        yPos += yAdd;
     }
-
 }
-int GameView::checkCardData(int RowIndex, int ColIndex)
-{
+
+void GameView::setCardsImages() {
+    int xPos = 100, yPos = 50, xAdd = 50, yAdd = 50, currX = 100;
+
+    for (int i = 0; i < sRows; i++) {
+        for (int j = 0; j < sCols; j++) {
+            Cards[i][j]->setState(false);
+
+            cardsImages[i][j].setPixmap(Cards[i][j]->getPixmap());
+            cardsImages[i][j].setPos(xPos, yPos);
+            scene->addItem(&cardsImages[i][j]);
+            xPos += xAdd;
+        }
+        xPos = currX;
+        yPos += yAdd;
+    }
+}
+
+int GameView::checkCardData(int RowIndex, int ColIndex) {
     return cardsData[RowIndex][ColIndex];
 }
-void GameView:: writeCardsData()
-{
-    QFile File("C:/College Work/AUC Study Work/CS2/Lab Work/Cinema Project/CinemaProjectG1/cardsData.txt");
-    File.open(QIODevice::WriteOnly | QIODevice::Text);
-    QTextStream stream(&File);
 
-    for(int i=0; i<sRows;i++)
-    {
-        for (int j=0;j<sCols;j++)
-        {
-            stream<<QString::number(cardsData[i][j]);
+void GameView::setCardHidden() {
+    int xPos = 100, yPos = 50, xAdd = 50, yAdd = 50, currX = 100;
+
+    for (int i = 0; i < sRows; i++) {
+        for (int j = 0; j < sCols; j++) {
+            QPixmap flippedCard(":/images/available.PNG");
+            flippedCard = flippedCard.scaledToWidth(45);
+            flippedCard = flippedCard.scaledToHeight(45);
+//            Cards[i][j]->setState(false);
+            flippedCards[i][j].setPixmap(flippedCard);
+            flippedCards[i][j].setPos(xPos, yPos);
+            scene->addItem(&flippedCards[i][j]);
+            scene->removeItem(&cardsImages[i][j]);
+
+            xPos += xAdd;
         }
-        stream<<"\n";
-    }
-    File.close();
 
+        xPos = currX;
+        yPos += yAdd;
+    }
 }
 
-void GameView::setCardHidden()
-{
-    QPixmap flippedCard(":/images/available.PNG");
-    flippedCard = flippedCard.scaledToWidth(45);
-    flippedCard = flippedCard.scaledToHeight(45);
-    int xPos=100, yPos=50, xAdd=50,yAdd=50, currX=100;
-    for(int i=0; i<sRows;i++)
-    {
-        for (int j=0;j<sCols;j++)
-        {
-            if(Cards [i][j]->getState()== card::NotFlipped)
-            {
-                flippedCards[i][j].setPixmap(flippedCard);
-                flippedCards[i][j].setPos(xPos,yPos);
-                scene->addItem(&flippedCards[i][j]);
-                scene->removeItem(&cardsImages[i][j]);
-            }
-            else if(Cards [i][j]->getState()== card::Flipped)
-            {
-                scene->removeItem(&flippedCards[i][j]);
+void GameView::FlipAllCards() {
+    // Temporarily show flipped cards
+    int xPos = 100, yPos = 50, xAdd = 50, yAdd = 50, currX = 100;
+
+    for (int i = 0; i < sRows; i++) {
+        for (int j = 0; j < sCols; j++) {
+            if (!Cards[i][j]->getState()){
                 scene->addItem(&cardsImages[i][j]);
-            }
-            xPos+=xAdd;
+                scene->removeItem(&flippedCards[i][j]);
 
+//                if (!scene->items().contains(&cardsImages[i][j])) {
+//                    scene->addItem(&cardsImages[i][j]);
+//                }
+//                if (scene->items().contains(&flippedCards[i][j]) && flippedCards) {
+//                    scene->removeItem(&flippedCards[i][j]);
+//                }
+            }
+            qDebug() << "Card [" << i << "][" << j << "] initialized with State: " << Cards[i][j]->getState();
+//            if (Cards[i][j]->getState() == card::NotFlipped) {
+//                if (!scene->items().contains(&cardsImages[i][j])) {
+//                    scene->addItem(&cardsImages[i][j]);
+//                }
+//                if (scene->items().contains(&flippedCards[i][j])) {
+//                    scene->removeItem(&flippedCards[i][j]);
+//                }
+//            } else {
+//                if (!scene->items().contains(&flippedCards[i][j])) {
+//                    scene->addItem(&flippedCards[i][j]);
+//                }
+//                if (scene->items().contains(&cardsImages[i][j])) {
+//                    scene->removeItem(&cardsImages[i][j]);
+//                }
+//            }
+
+            xPos += xAdd;
         }
-        xPos=currX;
-        yPos+=yAdd;
+
+        xPos = currX;
+        yPos += yAdd;
     }
-}
-void GameView::FlipAllCards()
-{
-    for(int i=0; i<sRows;i++)
-    {
-        for (int j=0;j<sCols;j++)
-        {
-            Cards[i][j]->flip();
+
+    xPos = 100, yPos = 50;
+
+    // Wait for a short duration (e.g., 1 second)
+    QTimer::singleShot(1000, [this, xPos, yPos]() {
+        // After waiting, flip the cards back
+        for (int i = 0; i < sRows; i++) {
+            for (int j = 0; j < sCols; j++) {
+//                if (!scene->items().contains(&flippedCards[i][j])) {
+//                    scene->addItem(&flippedCards[i][j]);
+//                }
+//                if (scene->items().contains(&cardsImages[i][j])) {
+//                    scene->removeItem(&cardsImages[i][j]);
+//                }
+
+                if (Cards[i][j]->getState() == false) {
+                    if (!scene->items().contains(&flippedCards[i][j])) {
+                        scene->addItem(&flippedCards[i][j]);
+                    }
+                    if (scene->items().contains(&cardsImages[i][j])) {
+                        scene->removeItem(&cardsImages[i][j]);
+                    }
+                }
+
+            }
         }
-    }
+    });
 }
-card* GameView::ReadCardState(int rowIndex, int colIndex)
-{
+
+card *GameView::ReadCardState(int rowIndex, int colIndex) {
     return Cards[rowIndex][colIndex];
 }
-void GameView::changeCardState(int rowIndex, int colIndex)
-{   /*Cards[rowIndex][colIndex]->flip();
 
-    if(Cards [rowIndex][colIndex]->getState()== card::Flipped)
-    {
-        scene->removeItem(&flippedCards[rowIndex][colIndex]);
-        scene->addItem(&cardsImages[rowIndex][colIndex]);
+void GameView::checkForMatch(int rowIndex, int colIndex) {
+    qDebug() << "Card [" << rowIndex << "][" << colIndex << "] initialized with ID: " << Cards[rowIndex][colIndex]->getId();
 
+    if (lastOpenedRowIndex != -1 && lastOpenedColIndex != -1 && rowIndex != -1 && colIndex != -1) {
+        qDebug() << "Card Match = " << (*Cards[lastOpenedRowIndex][lastOpenedColIndex] == *Cards[rowIndex][colIndex]);
+
+        if (*Cards[lastOpenedRowIndex][lastOpenedColIndex] == *Cards[rowIndex][colIndex]) {
+            Cards[lastOpenedRowIndex][lastOpenedColIndex]->flip();
+            Cards[rowIndex][colIndex]->flip();
+            // Matching condition
+            // Flip both cards and set state after a delay
+            if (!scene->items().contains(&cardsImages[rowIndex][colIndex]) ) {
+                scene->addItem(&cardsImages[rowIndex][colIndex]);
+            }
+            if (scene->items().contains(&flippedCards[rowIndex][colIndex])) {
+                scene->removeItem(&flippedCards[rowIndex][colIndex]);
+            }
+            QTimer::singleShot(1000, [this, rowIndex, colIndex]() {
+
+                if (scene->items().contains(&cardsImages[rowIndex][colIndex])) {
+                    scene->removeItem(&cardsImages[rowIndex][colIndex]);
+                }
+                if (!scene->items().contains(&flippedCards[rowIndex][colIndex])) {
+                    scene->removeItem(&flippedCards[rowIndex][colIndex]);
+                }
+                if (!scene->items().contains(&flippedCards[lastOpenedRowIndex][lastOpenedColIndex])) {
+                    scene->removeItem(&flippedCards[lastOpenedRowIndex][lastOpenedColIndex]);
+                }
+                if (scene->items().contains(&cardsImages[lastOpenedRowIndex][lastOpenedColIndex])) {
+                    scene->removeItem(&cardsImages[lastOpenedRowIndex][lastOpenedColIndex]);
+                }
+
+//                 Set state for both matching cards
+                Cards[lastOpenedRowIndex][lastOpenedColIndex]->setState(true);
+                Cards[rowIndex][colIndex]->setState(true);
+
+                // Reset the last opened indices
+                lastOpenedRowIndex = -1;
+                lastOpenedColIndex = -1;
+            });
+        } else {
+            // No match
+            // Flip both cards back after a delay
+            if (!scene->items().contains(&cardsImages[rowIndex][colIndex]) ) {
+                scene->addItem(&cardsImages[rowIndex][colIndex]);
+            }
+            if (scene->items().contains(&flippedCards[rowIndex][colIndex])) {
+                scene->removeItem(&flippedCards[rowIndex][colIndex]);
+            }
+//            Cards[lastOpenedRowIndex][lastOpenedColIndex]->flip();
+            QTimer::singleShot(1000, [this, rowIndex, colIndex]() {
+//                Cards[lastOpenedRowIndex][lastOpenedColIndex]->flip();
+                Cards[rowIndex][colIndex]->flip();
+                if (!scene->items().contains(&flippedCards[lastOpenedRowIndex][lastOpenedColIndex])) {
+                    scene->addItem(&flippedCards[lastOpenedRowIndex][lastOpenedColIndex]);
+                }
+                if (scene->items().contains(&cardsImages[lastOpenedRowIndex][lastOpenedColIndex])) {
+                    scene->removeItem(&cardsImages[lastOpenedRowIndex][lastOpenedColIndex]);
+                }
+                if (!scene->items().contains(&flippedCards[rowIndex][colIndex])) {
+                    scene->addItem(&flippedCards[rowIndex][colIndex]);
+                }
+                if (scene->items().contains(&cardsImages[rowIndex][colIndex])) {
+                    scene->removeItem(&cardsImages[rowIndex][colIndex]);
+                }
+                Cards[lastOpenedRowIndex][lastOpenedColIndex]->setState(false);
+                Cards[rowIndex][colIndex]->setState(false);
+                // Reset the last opened indices
+                lastOpenedRowIndex = -1;
+                lastOpenedColIndex = -1;
+
+            });
+        }
+    } else {
+        Cards[rowIndex][colIndex]->setState(true);
+        // Set the current card as the last opened card
+        if (!scene->items().contains(&cardsImages[rowIndex][colIndex]) ) {
+            scene->addItem(&cardsImages[rowIndex][colIndex]);
+        }
+        if (scene->items().contains(&flippedCards[rowIndex][colIndex]) && flippedCards) {
+            scene->removeItem(&flippedCards[rowIndex][colIndex]);
+        }
+        lastOpenedRowIndex = rowIndex;
+        lastOpenedColIndex = colIndex;
     }
-    else if(Cards [rowIndex][colIndex]->getState()== card::NotFlipped)
-    {
-        scene->removeItem(&cardsImages[rowIndex][colIndex]);
-        scene->addItem(&flippedCards[rowIndex][colIndex]);
+}
 
-    }
-    */
+
+void GameView::changeCardState(int rowIndex, int colIndex) {
+
     Cards[rowIndex][colIndex]->flip();
 
-    if (Cards[rowIndex][colIndex]->getState() == card::Flipped) {
+    if (Cards[rowIndex][colIndex]->getState() == false) {
         scene->removeItem(&flippedCards[rowIndex][colIndex]);
         if (!scene->items().contains(&cardsImages[rowIndex][colIndex])) {
             scene->addItem(&cardsImages[rowIndex][colIndex]);
         }
-    } else if (Cards[rowIndex][colIndex]->getState() == card::NotFlipped) {
+    } else if (Cards[rowIndex][colIndex]->getState() == false) {
         scene->removeItem(&cardsImages[rowIndex][colIndex]);
         if (!scene->items().contains(&flippedCards[rowIndex][colIndex])) {
             scene->addItem(&flippedCards[rowIndex][colIndex]);
@@ -307,3 +294,4 @@ void GameView::changeCardState(int rowIndex, int colIndex)
     }
 
 }
+

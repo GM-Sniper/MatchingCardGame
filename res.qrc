@@ -23,6 +23,24 @@
         <file>Images/technology.png</file>
         <file>Images/tropical-fish.png</file>
         <file>Images/watermelon.png</file>
+        <file>Images/image1.png</file>
+        <file>Images/image2.png</file>
+        <file>Images/image3.png</file>
+        <file>Images/image4.png</file>
+        <file>Images/image5.png</file>
+        <file>Images/image6.png</file>
+        <file>Images/image7.png</file>
+        <file>Images/image8.png</file>
+        <file>Images/image9.png</file>
+        <file>Images/image10.png</file>
+        <file>Images/image11.png</file>
+        <file>Images/image12.png</file>
+        <file>Images/image13.png</file>
+        <file>Images/image14.png</file>
+        <file>Images/image15.png</file>
+        <file>Images/image16.png</file>
+        <file>Images/image17.png</file>
+        <file>Images/image18.png</file>
     </qresource>
     <qresource prefix="/texts">
         <file>cardsData.txt</file>

@@ -19,6 +19,7 @@ CheckMark::CheckMark(GameView* inGame, QGraphicsTextItem* inCurrText)
     previousItem=nullptr;
     gameView=inGame;
     CurrText=inCurrText;
+    setZValue(1);
 
 }
 void CheckMark::keyPressEvent(QKeyEvent *event)
@@ -44,53 +45,43 @@ void CheckMark::keyPressEvent(QKeyEvent *event)
         rowIndex++;}
     }
     else if(event->key() == Qt::Key_Space)
-    {   pointerRead=this;
-        scene()->removeItem(pointerRead);
-        gameView->changeCardState(rowIndex,colIndex);
+    {
 
-        openingCounter++;
+        // Check for a match
+        gameView->checkForMatch(rowIndex, colIndex);
+        previousItem=nullptr;
 
-        if (openingCounter%2==0)
-        {
-            //CurrText->setDefaultTextColor(Qt::green);
-            //CurrText->setPlainText("This Card has been Booked sucessfully");
+//        gameView->setCardHidden();
 
-            //gameView->writeCardsData();
-        }
-        else
-        {
-            //CurrText->setDefaultTextColor(Qt::red);
-            //->setPlainText("This Card is already Booked");
-        }
     }
     else if(event->key() == Qt::Key_S)
     {
         gameView->FlipAllCards();
-        gameView->setCardHidden();
+        previousItem=nullptr;
 
     }
 
 
     QList<QGraphicsItem*> colliding_items = collidingItems();
 
-    for(int i = 0; i < colliding_items.size(); i++)
-    {
-
-        scene()->removeItem(colliding_items[i]);
-
-        CurrText->setDefaultTextColor(Qt::blue);
-        CurrText->setPlainText("Card: " + cardRowNames[rowIndex]+QString::number(colIndex+1));
-
-    }
-    if(colliding_items.size()>0)
-        {
-            if(previousItem!=nullptr)
-            {   //previousItem=(QGraphicsPixmapItem*)colliding_items[0];
-                gameView->scene->addItem(previousItem);
-                //gameView->scene->addItem(previousCard);
-            }
-            previousItem=(QGraphicsPixmapItem*)colliding_items[0];
-            //previousCard=(QGraphicsPixmapItem*)colliding_items[1];
-        }
+//    for(int i = 0; i < colliding_items.size(); i++)
+//    {
+//
+//        scene()->removeItem(colliding_items[i]);
+//
+//        CurrText->setDefaultTextColor(Qt::blue);
+//        CurrText->setPlainText("Card: " + cardRowNames[rowIndex]+QString::number(colIndex+1));
+//
+//    }
+//    if(colliding_items.size()>0)
+//        {
+//            if(previousItem!=nullptr)
+//            {   //previousItem=(QGraphicsPixmapItem*)colliding_items[0];
+//                gameView->scene->addItem(previousItem);
+//                //gameView->scene->addItem(previousCard);
+//            }
+//            previousItem=(QGraphicsPixmapItem*)colliding_items[0];
+//            //previousCard=(QGraphicsPixmapItem*)colliding_items[1];
+//        }
 
 }
