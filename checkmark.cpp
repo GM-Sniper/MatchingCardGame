@@ -2,6 +2,7 @@
 #include "gameview.h"
 #include <QKeyEvent>
 #include <QString>
+#include <QTimer>
 
 #include <QGraphicsScene>
 #include <QList>
@@ -33,31 +34,6 @@ CheckMark::CheckMark(GameView* inGame, QGraphicsTextItem* inCurrText, QGraphicsT
 
 }
 
-void CheckMark::checkGameOver()
-{
-    // Hide the game view
-//    setGameVisibility(false);
-
-    if (score >= (sRows*sCols)/2) {
-        // Player wins
-        statusText->setDefaultTextColor(Qt::green);
-        statusText->setPlainText("You Win!");
-//        setGameVisibility(false);
-
-    } else if ((openingCounter/4) >= 40) {
-        // Player loses
-        statusText->setDefaultTextColor(Qt::red);
-        statusText->setPlainText("Game Over - You Lose!");
-//        setGameVisibility(false);
-
-
-    }
-}
-void CheckMark::setGameVisibility(bool isVisible)
-{
-    gameView->scene->clear();
-    gameView->view->viewport()->update();
-}
 
 void CheckMark::keyPressEvent(QKeyEvent *event)
 {
@@ -104,7 +80,26 @@ void CheckMark::keyPressEvent(QKeyEvent *event)
             CurrText->setPlainText("Opennings: "+QString::number(openingCounter/2));
         }
 //        gameView->setCardHidden();
+        if (score >= (sRows*sCols)/2) {
+            // Player wins
+            statusText->setDefaultTextColor(Qt::green);
+            statusText->setPlainText("You Win!");
+            gameView->clearGame();
+//        setGameVisibility(false);
 
+        } else if ((openingCounter/2) >= 40) {
+            // Player loses
+            QTimer::singleShot(1050, [this]() {
+                gameView->clearGame();
+                statusText->setDefaultTextColor(Qt::red);
+                statusText->setPos(130, 190);
+                statusText->setPlainText("Game Over - You Lose!");
+            });
+
+
+//        setGameVisibility(false);
+
+        }
     }
     else if(event->key() == Qt::Key_S)
     {
@@ -135,5 +130,5 @@ void CheckMark::keyPressEvent(QKeyEvent *event)
 //            previousItem=(QGraphicsPixmapItem*)colliding_items[0];
 //            //previousCard=(QGraphicsPixmapItem*)colliding_items[1];
 //        }
-    checkGameOver();
+
 }

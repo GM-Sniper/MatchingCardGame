@@ -46,6 +46,7 @@ public:
         }
     }
 
+    void clearGame();
 };
 
 #endif // GAMEVIEW_H

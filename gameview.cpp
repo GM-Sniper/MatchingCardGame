@@ -35,10 +35,10 @@ GameView::GameView() :lastOpenedRowIndex(-1),lastOpenedColIndex(-1) {
     currScoreText->setPos(300, 400);
     scene->addItem(currScoreText);
 
-    QGraphicsTextItem* WinStatusText = new QGraphicsTextItem;
+    WinStatusText = new QGraphicsTextItem;
     WinStatusText->setFont(QFont("times", 16));
 //    statusText->setDefaultTextColor(Qt::green);
-    WinStatusText->setPos(240, 250);
+    WinStatusText->setPos(200, 190);
     scene->addItem(WinStatusText);
 
     checkmark = new CheckMark(this, currCardText,currScoreText,WinStatusText);
@@ -47,7 +47,21 @@ GameView::GameView() :lastOpenedRowIndex(-1),lastOpenedColIndex(-1) {
     checkmark->setFocus();
     scene->addItem(checkmark);
 }
+void GameView::clearGame() {
+    // Remove all items from the scene
+    QList < QGraphicsItem * > allItems = scene->items();
+    for (QGraphicsItem *item: allItems) {
+        if (item != WinStatusText) {
+            scene->removeItem(item);
 
+//            delete cardsImages;  // Free the memory
+//            delete flippedCards;  // Free the memory
+        }
+
+    }
+
+
+}
 void GameView::initalizeCard() {
     // Use a vector to store cards
     std::vector <card*> allCards;
@@ -180,7 +194,7 @@ void GameView::FlipAllCards() {
 
 bool GameView::checkForMatch(int rowIndex, int colIndex) {
     qDebug() << "Card [" << rowIndex << "][" << colIndex << "] initialized with ID: " << Cards[rowIndex][colIndex]->getId();
-    if (!(lastOpenedRowIndex == rowIndex && lastOpenedColIndex == colIndex) && !Cards[rowIndex][colIndex]->isMatched() && !Cards[lastOpenedRowIndex][lastOpenedColIndex]->isMatched()) {
+    if (!(lastOpenedRowIndex == rowIndex && lastOpenedColIndex == colIndex) && !Cards[rowIndex][colIndex]->isMatched() &&!(rowIndex < 0 || rowIndex >= sRows || colIndex < 0 || colIndex >= sCols)) {
         if (lastOpenedRowIndex != -1 && lastOpenedColIndex != -1 && rowIndex != -1 && colIndex != -1) {
             qDebug() << "Card Match = "
                      << (*Cards[lastOpenedRowIndex][lastOpenedColIndex] == *Cards[rowIndex][colIndex]);
@@ -201,12 +215,10 @@ bool GameView::checkForMatch(int rowIndex, int colIndex) {
                     if (scene->items().contains(&cardsImages[rowIndex][colIndex])) {
                         scene->removeItem(&cardsImages[rowIndex][colIndex]);
                     }
-                    if (!scene->items().contains(&flippedCards[rowIndex][colIndex])) {
-                        scene->removeItem(&flippedCards[rowIndex][colIndex]);
-                    }
-                    if (!scene->items().contains(&flippedCards[lastOpenedRowIndex][lastOpenedColIndex])) {
-                        scene->removeItem(&flippedCards[lastOpenedRowIndex][lastOpenedColIndex]);
-                    }
+
+//                    if (!scene->items().contains(&flippedCards[lastOpenedRowIndex][lastOpenedColIndex])) {
+//                        scene->removeItem(&flippedCards[lastOpenedRowIndex][lastOpenedColIndex]);
+//                    }
                     if (scene->items().contains(&cardsImages[lastOpenedRowIndex][lastOpenedColIndex])) {
                         scene->removeItem(&cardsImages[lastOpenedRowIndex][lastOpenedColIndex]);
                     }

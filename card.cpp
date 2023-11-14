@@ -1,7 +1,7 @@
 // card.cpp
 #include "card.h"
 
-card::card(int id, const QString &imagePath) : id(id), state(false)
+card::card(int id, const QString &imagePath) : id(id), state(false),matched(false)
 {
     image = QPixmap(imagePath);
     image = image.scaled(QSize(40, 40), Qt::KeepAspectRatio, Qt::FastTransformation);
