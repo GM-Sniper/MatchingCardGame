@@ -47,6 +47,15 @@ QPixmap card::getPixmap() const
 {
     return image;
 }
+bool card::isMatched() const
+{
+    return matched;
+}
+
+void card::setMatched(bool status)
+{
+    matched = status;
+}
 
 bool card::operator==(const card &other) const
 {

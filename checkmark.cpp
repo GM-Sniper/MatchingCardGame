@@ -10,7 +10,7 @@
 #include "card.h"
 #include "Users.h"
 
-CheckMark::CheckMark(GameView* inGame, QGraphicsTextItem* inCurrText, QGraphicsTextItem* currScoreText)
+CheckMark::CheckMark(GameView* inGame, QGraphicsTextItem* inCurrText, QGraphicsTextItem* currScoreText, QGraphicsTextItem* statusText)
 {
     QPixmap clicker(":/images/checkmark.png");
     clicker = clicker.scaledToWidth(40);
@@ -21,6 +21,7 @@ CheckMark::CheckMark(GameView* inGame, QGraphicsTextItem* inCurrText, QGraphicsT
     previousItem=nullptr;
     gameView=inGame;
     CurrText=inCurrText;
+    this->statusText=statusText;
     this->currScoreText=currScoreText;
     score = 0;
     openingCounter = 0;
@@ -31,6 +32,33 @@ CheckMark::CheckMark(GameView* inGame, QGraphicsTextItem* inCurrText, QGraphicsT
     CurrText->setPlainText("Opennings: "+QString::number(0));
 
 }
+
+void CheckMark::checkGameOver()
+{
+    // Hide the game view
+//    setGameVisibility(false);
+
+    if (score >= (sRows*sCols)/2) {
+        // Player wins
+        statusText->setDefaultTextColor(Qt::green);
+        statusText->setPlainText("You Win!");
+//        setGameVisibility(false);
+
+    } else if ((openingCounter/4) >= 40) {
+        // Player loses
+        statusText->setDefaultTextColor(Qt::red);
+        statusText->setPlainText("Game Over - You Lose!");
+//        setGameVisibility(false);
+
+
+    }
+}
+void CheckMark::setGameVisibility(bool isVisible)
+{
+    gameView->scene->clear();
+    gameView->view->viewport()->update();
+}
+
 void CheckMark::keyPressEvent(QKeyEvent *event)
 {
     if (event->key() == Qt::Key_Left)
@@ -107,5 +135,5 @@ void CheckMark::keyPressEvent(QKeyEvent *event)
 //            previousItem=(QGraphicsPixmapItem*)colliding_items[0];
 //            //previousCard=(QGraphicsPixmapItem*)colliding_items[1];
 //        }
-
+    checkGameOver();
 }

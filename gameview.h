@@ -19,22 +19,20 @@ private:
     card *Cards[sRows][sCols];
     QGraphicsPixmapItem cardsImages[sRows][sCols];
     QGraphicsTextItem* currCardText;
+    QGraphicsTextItem* currScoreText;
+    QGraphicsTextItem* WinStatusText;
 
 public:
     GameView();
 
 //    explicit GameView(card (*cards)[6]);
 
-    int checkCardData(int RowIndex, int ColIndex);
-    void readDataCards();
-    void checkForMatch(int rowIndex,int colIndex);
-    void setCardsImages();
+
+    bool checkForMatch(int rowIndex, int colIndex);
     QGraphicsScene* scene;
     QGraphicsView* view;
     void setCardHidden();
     void initalizeCard();
-    void changeCardState(int rowIndex, int colIndex);
-    card* ReadCardState(int rowIndex, int colIndex);
     void FlipAllCards();
     CheckMark* checkmark;
     ~GameView()

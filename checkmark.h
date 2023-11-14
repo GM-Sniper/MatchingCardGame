@@ -10,13 +10,18 @@ class CheckMark: public QGraphicsPixmapItem, public QObject
 {
 
 public:
-    CheckMark(GameView* inGame, QGraphicsTextItem* inCurrText,QGraphicsTextItem* currScoreText);
+    CheckMark(GameView* inGame, QGraphicsTextItem* inCurrText, QGraphicsTextItem* currScoreText, QGraphicsTextItem* inStatusText);
+    // Helper function to check if the game is over (either win or lose)
+    void checkGameOver();
+    void setGameVisibility(bool isVisible);
 
 private:
 
     GameView* gameView;
     QGraphicsTextItem* CurrText;
     QGraphicsTextItem* currScoreText;
+    QGraphicsTextItem* statusText;
+
     int rowIndex, colIndex;
     QGraphicsPixmapItem* previousItem;
     QGraphicsPixmapItem* pointerRead;

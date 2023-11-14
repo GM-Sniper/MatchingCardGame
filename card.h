@@ -14,7 +14,9 @@ public:
 //    State getState() const;
     bool getState() const;
     void setState(bool status);
-//    void setState(card::State status);
+    bool isMatched() const;
+    void setMatched(bool status);
+
     void flip();
     bool isMatch(const card &other) const;
     void setPixmap(const QPixmap &pixmap);
@@ -25,7 +27,9 @@ public:
 private:
     int id;
     bool state;
-//    State state;
+    bool matched;
+
+    //    State state;
     QPixmap image;
 };
 

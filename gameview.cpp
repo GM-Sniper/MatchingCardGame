@@ -29,7 +29,19 @@ GameView::GameView() :lastOpenedRowIndex(-1),lastOpenedColIndex(-1) {
     currCardText->setPos(20, 400);
     scene->addItem(currCardText);
 
-    checkmark = new CheckMark(this, currCardText);
+    currScoreText = new QGraphicsTextItem;
+    currScoreText->setFont(QFont("times", 16));
+    currScoreText->setDefaultTextColor(Qt::red);
+    currScoreText->setPos(300, 400);
+    scene->addItem(currScoreText);
+
+    QGraphicsTextItem* WinStatusText = new QGraphicsTextItem;
+    WinStatusText->setFont(QFont("times", 16));
+//    statusText->setDefaultTextColor(Qt::green);
+    WinStatusText->setPos(240, 250);
+    scene->addItem(WinStatusText);
+
+    checkmark = new CheckMark(this, currCardText,currScoreText,WinStatusText);
     checkmark->setPos(50, 50);
     checkmark->setFlag(QGraphicsItem::ItemIsFocusable);
     checkmark->setFocus();
@@ -73,26 +85,6 @@ void GameView::initalizeCard() {
     }
 }
 
-void GameView::setCardsImages() {
-    int xPos = 100, yPos = 50, xAdd = 50, yAdd = 50, currX = 100;
-
-    for (int i = 0; i < sRows; i++) {
-        for (int j = 0; j < sCols; j++) {
-            Cards[i][j]->setState(false);
-
-            cardsImages[i][j].setPixmap(Cards[i][j]->getPixmap());
-            cardsImages[i][j].setPos(xPos, yPos);
-            scene->addItem(&cardsImages[i][j]);
-            xPos += xAdd;
-        }
-        xPos = currX;
-        yPos += yAdd;
-    }
-}
-
-int GameView::checkCardData(int RowIndex, int ColIndex) {
-    return cardsData[RowIndex][ColIndex];
-}
 
 void GameView::setCardHidden() {
     int xPos = 100, yPos = 50, xAdd = 50, yAdd = 50, currX = 100;
@@ -185,113 +177,103 @@ void GameView::FlipAllCards() {
     });
 }
 
-card *GameView::ReadCardState(int rowIndex, int colIndex) {
-    return Cards[rowIndex][colIndex];
-}
 
-void GameView::checkForMatch(int rowIndex, int colIndex) {
+bool GameView::checkForMatch(int rowIndex, int colIndex) {
     qDebug() << "Card [" << rowIndex << "][" << colIndex << "] initialized with ID: " << Cards[rowIndex][colIndex]->getId();
+    if (!(lastOpenedRowIndex == rowIndex && lastOpenedColIndex == colIndex) && !Cards[rowIndex][colIndex]->isMatched() && !Cards[lastOpenedRowIndex][lastOpenedColIndex]->isMatched()) {
+        if (lastOpenedRowIndex != -1 && lastOpenedColIndex != -1 && rowIndex != -1 && colIndex != -1) {
+            qDebug() << "Card Match = "
+                     << (*Cards[lastOpenedRowIndex][lastOpenedColIndex] == *Cards[rowIndex][colIndex]);
 
-    if (lastOpenedRowIndex != -1 && lastOpenedColIndex != -1 && rowIndex != -1 && colIndex != -1) {
-        qDebug() << "Card Match = " << (*Cards[lastOpenedRowIndex][lastOpenedColIndex] == *Cards[rowIndex][colIndex]);
-
-        if (*Cards[lastOpenedRowIndex][lastOpenedColIndex] == *Cards[rowIndex][colIndex]) {
-            Cards[lastOpenedRowIndex][lastOpenedColIndex]->flip();
-            Cards[rowIndex][colIndex]->flip();
-            // Matching condition
-            // Flip both cards and set state after a delay
-            if (!scene->items().contains(&cardsImages[rowIndex][colIndex]) ) {
-                scene->addItem(&cardsImages[rowIndex][colIndex]);
-            }
-            if (scene->items().contains(&flippedCards[rowIndex][colIndex])) {
-                scene->removeItem(&flippedCards[rowIndex][colIndex]);
-            }
-            QTimer::singleShot(1000, [this, rowIndex, colIndex]() {
-
-                if (scene->items().contains(&cardsImages[rowIndex][colIndex])) {
-                    scene->removeItem(&cardsImages[rowIndex][colIndex]);
+            if (*Cards[lastOpenedRowIndex][lastOpenedColIndex] == *Cards[rowIndex][colIndex]) {
+                Cards[lastOpenedRowIndex][lastOpenedColIndex]->flip();
+                Cards[rowIndex][colIndex]->flip();
+                // Matching condition
+                // Flip both cards and set state after a delay
+                if (!scene->items().contains(&cardsImages[rowIndex][colIndex])) {
+                    scene->addItem(&cardsImages[rowIndex][colIndex]);
                 }
-                if (!scene->items().contains(&flippedCards[rowIndex][colIndex])) {
+                if (scene->items().contains(&flippedCards[rowIndex][colIndex])) {
                     scene->removeItem(&flippedCards[rowIndex][colIndex]);
                 }
-                if (!scene->items().contains(&flippedCards[lastOpenedRowIndex][lastOpenedColIndex])) {
-                    scene->removeItem(&flippedCards[lastOpenedRowIndex][lastOpenedColIndex]);
-                }
-                if (scene->items().contains(&cardsImages[lastOpenedRowIndex][lastOpenedColIndex])) {
-                    scene->removeItem(&cardsImages[lastOpenedRowIndex][lastOpenedColIndex]);
-                }
+                QTimer::singleShot(1000, [this, rowIndex, colIndex]() {
+
+                    if (scene->items().contains(&cardsImages[rowIndex][colIndex])) {
+                        scene->removeItem(&cardsImages[rowIndex][colIndex]);
+                    }
+                    if (!scene->items().contains(&flippedCards[rowIndex][colIndex])) {
+                        scene->removeItem(&flippedCards[rowIndex][colIndex]);
+                    }
+                    if (!scene->items().contains(&flippedCards[lastOpenedRowIndex][lastOpenedColIndex])) {
+                        scene->removeItem(&flippedCards[lastOpenedRowIndex][lastOpenedColIndex]);
+                    }
+                    if (scene->items().contains(&cardsImages[lastOpenedRowIndex][lastOpenedColIndex])) {
+                        scene->removeItem(&cardsImages[lastOpenedRowIndex][lastOpenedColIndex]);
+                    }
 
 //                 Set state for both matching cards
-                Cards[lastOpenedRowIndex][lastOpenedColIndex]->setState(true);
-                Cards[rowIndex][colIndex]->setState(true);
+                    Cards[lastOpenedRowIndex][lastOpenedColIndex]->setState(true);
+                    Cards[rowIndex][colIndex]->setState(true);
+                    Cards[lastOpenedRowIndex][lastOpenedColIndex]->setMatched(true);
+                    Cards[rowIndex][colIndex]->setMatched(true);
 
-                // Reset the last opened indices
-                lastOpenedRowIndex = -1;
-                lastOpenedColIndex = -1;
-            });
+
+                    // Reset the last opened indices
+                    lastOpenedRowIndex = -1;
+                    lastOpenedColIndex = -1;
+                });
+                return true;
+            } else {
+                // No match
+                // Flip both cards back after a delay
+                if (!scene->items().contains(&cardsImages[rowIndex][colIndex])) {
+                    scene->addItem(&cardsImages[rowIndex][colIndex]);
+                }
+                if (scene->items().contains(&flippedCards[rowIndex][colIndex])) {
+                    scene->removeItem(&flippedCards[rowIndex][colIndex]);
+                }
+//            Cards[lastOpenedRowIndex][lastOpenedColIndex]->flip();
+                QTimer::singleShot(1000, [this, rowIndex, colIndex]() {
+//                Cards[lastOpenedRowIndex][lastOpenedColIndex]->flip();
+                    Cards[rowIndex][colIndex]->flip();
+                    if (!scene->items().contains(&flippedCards[lastOpenedRowIndex][lastOpenedColIndex])) {
+                        scene->addItem(&flippedCards[lastOpenedRowIndex][lastOpenedColIndex]);
+                    }
+                    if (scene->items().contains(&cardsImages[lastOpenedRowIndex][lastOpenedColIndex])) {
+                        scene->removeItem(&cardsImages[lastOpenedRowIndex][lastOpenedColIndex]);
+                    }
+                    if (!scene->items().contains(&flippedCards[rowIndex][colIndex])) {
+                        scene->addItem(&flippedCards[rowIndex][colIndex]);
+                    }
+                    if (scene->items().contains(&cardsImages[rowIndex][colIndex])) {
+                        scene->removeItem(&cardsImages[rowIndex][colIndex]);
+                    }
+                    Cards[lastOpenedRowIndex][lastOpenedColIndex]->setState(false);
+                    Cards[rowIndex][colIndex]->setState(false);
+                    // Reset the last opened indices
+                    lastOpenedRowIndex = -1;
+                    lastOpenedColIndex = -1;
+
+                });
+                return false;
+            }
         } else {
-            // No match
-            // Flip both cards back after a delay
-            if (!scene->items().contains(&cardsImages[rowIndex][colIndex]) ) {
+            Cards[rowIndex][colIndex]->setState(true);
+            // Set the current card as the last opened card
+            if (!scene->items().contains(&cardsImages[rowIndex][colIndex])) {
                 scene->addItem(&cardsImages[rowIndex][colIndex]);
             }
-            if (scene->items().contains(&flippedCards[rowIndex][colIndex])) {
+            if (scene->items().contains(&flippedCards[rowIndex][colIndex]) && flippedCards) {
                 scene->removeItem(&flippedCards[rowIndex][colIndex]);
             }
-//            Cards[lastOpenedRowIndex][lastOpenedColIndex]->flip();
-            QTimer::singleShot(1000, [this, rowIndex, colIndex]() {
-//                Cards[lastOpenedRowIndex][lastOpenedColIndex]->flip();
-                Cards[rowIndex][colIndex]->flip();
-                if (!scene->items().contains(&flippedCards[lastOpenedRowIndex][lastOpenedColIndex])) {
-                    scene->addItem(&flippedCards[lastOpenedRowIndex][lastOpenedColIndex]);
-                }
-                if (scene->items().contains(&cardsImages[lastOpenedRowIndex][lastOpenedColIndex])) {
-                    scene->removeItem(&cardsImages[lastOpenedRowIndex][lastOpenedColIndex]);
-                }
-                if (!scene->items().contains(&flippedCards[rowIndex][colIndex])) {
-                    scene->addItem(&flippedCards[rowIndex][colIndex]);
-                }
-                if (scene->items().contains(&cardsImages[rowIndex][colIndex])) {
-                    scene->removeItem(&cardsImages[rowIndex][colIndex]);
-                }
-                Cards[lastOpenedRowIndex][lastOpenedColIndex]->setState(false);
-                Cards[rowIndex][colIndex]->setState(false);
-                // Reset the last opened indices
-                lastOpenedRowIndex = -1;
-                lastOpenedColIndex = -1;
-
-            });
+            lastOpenedRowIndex = rowIndex;
+            lastOpenedColIndex = colIndex;
+            return false;
         }
-    } else {
-        Cards[rowIndex][colIndex]->setState(true);
-        // Set the current card as the last opened card
-        if (!scene->items().contains(&cardsImages[rowIndex][colIndex]) ) {
-            scene->addItem(&cardsImages[rowIndex][colIndex]);
-        }
-        if (scene->items().contains(&flippedCards[rowIndex][colIndex]) && flippedCards) {
-            scene->removeItem(&flippedCards[rowIndex][colIndex]);
-        }
-        lastOpenedRowIndex = rowIndex;
-        lastOpenedColIndex = colIndex;
+    } else{
+        return false;
     }
 }
 
 
-void GameView::changeCardState(int rowIndex, int colIndex) {
-
-    Cards[rowIndex][colIndex]->flip();
-
-    if (Cards[rowIndex][colIndex]->getState() == false) {
-        scene->removeItem(&flippedCards[rowIndex][colIndex]);
-        if (!scene->items().contains(&cardsImages[rowIndex][colIndex])) {
-            scene->addItem(&cardsImages[rowIndex][colIndex]);
-        }
-    } else if (Cards[rowIndex][colIndex]->getState() == false) {
-        scene->removeItem(&cardsImages[rowIndex][colIndex]);
-        if (!scene->items().contains(&flippedCards[rowIndex][colIndex])) {
-            scene->addItem(&flippedCards[rowIndex][colIndex]);
-        }
-    }
-
-}
 
