@@ -1,4 +1,6 @@
 # Matching Cards Game - Qt Implementation
+<img width="341" alt="image" src="https://github.com/GM-Sniper/MatchingCardGame/assets/144553627/dca6cf5a-f2b1-4cef-9a35-00e717f53403">
+
 
 ## Introduction
 
@@ -33,6 +35,30 @@ Welcome to the Matching Cards Game implemented in Qt! This game challenges playe
 - Players navigate the card grid using keyboard arrows and open cards with the spacebar.
 - The game counts openings and matches, displaying progress and end conditions accordingly.
 - Users can use the 'S' key to reveal all cards temporarily.
+
+### Requirements
+
+- Qt framework installed on your machine.
+- Compatible OS (Windows, macOS, Linux) for Qt development.
+
+### Installation
+
+1. Clone the repository to your local machine.
+2. Open the project in Qt Creator or your preferred IDE.
+3. Build and run the project.
+
+### Usage
+
+- Follow on-screen instructions and keyboard controls to interact with the game.
+- Use 'S' to reveal all cards temporarily and navigate using arrow keys and the spacebar.
+
+## Contribution
+
+Contributions to the game project are welcome! Feel free to fork the repository, make changes, and submit pull requests.
+
+## License
+
+This project is licensed under the [MIT License](LICENSE).
 - Winning the game displays a victory message, while exceeding move limits results in a game over.
 
 ### Implementation Details
