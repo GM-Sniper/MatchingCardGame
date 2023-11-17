@@ -1,5 +1,8 @@
 # Matching Cards Game - Qt Implementation
+<img width="355" alt="image" src="https://github.com/GM-Sniper/MatchingCardGame/assets/144553627/69a80818-9d23-4b1e-a4f3-4817acd3e0b9">
+
 <img width="341" alt="image" src="https://github.com/GM-Sniper/MatchingCardGame/assets/144553627/dca6cf5a-f2b1-4cef-9a35-00e717f53403">
+
 
 
 ## Introduction
@@ -28,7 +31,7 @@ Welcome to the Matching Cards Game implemented in Qt! This game challenges playe
 
 ### Bonus Feature
 
-- **Login Window**: Before starting the game, users must log in with their credentials. Successful login displays the user's name and image on the game screen.
+- **Login Window**: Before starting the game, users must log in with their credentials. Successful login displays the user's name and image on the game screen. (Use username: Admin and password: admin to log into the game. To change the username or pasword, add an element in the array in users.h)
 
 ### Game Flow
 
