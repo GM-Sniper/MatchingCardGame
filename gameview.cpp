@@ -7,9 +7,13 @@
 #include <QGraphicsEllipseItem>
 #include <QGraphicsTextItem>
 #include <QGraphicsPixmapItem>
+#include <algorithm>
+
+#include <random>
+
+
 #include "card.h"
 #include "checkmark.h"
-#include "mainwindow.h"
 
 GameView::GameView(QString x) :lastOpenedRowIndex(-1),lastOpenedColIndex(-1) {
     this->x=x;
@@ -96,7 +100,10 @@ void GameView::initalizeCard() {
     }
 
     // Shuffle the vector to randomize card positions
-    std::random_shuffle(allCards.begin(), allCards.end());
+    auto rng = std::default_random_engine {};
+    std::shuffle(std::begin(allCards), std::end(allCards), rng);
+
+//    std::random_shuffle(allCards.begin(), allCards.end());
 
     // Assign cards to the grid
     int index = 0;
@@ -185,7 +192,7 @@ void GameView::FlipAllCards() {
     xPos = 100, yPos = 50;
 
     // Wait for a short duration (e.g., 1 second)
-    QTimer::singleShot(1000, [this, xPos, yPos]() {
+    QTimer::singleShot(1000, [this]() {
         // After waiting, flip the cards back
         for (int i = 0; i < sRows; i++) {
             for (int j = 0; j < sCols; j++) {

@@ -70,7 +70,8 @@ void CheckMark::keyPressEvent(QKeyEvent *event) {
         // Check for a match
         int match = gameView->checkForMatch(rowIndex, colIndex);
         previousItem = nullptr;
-        openingCounter++;
+
+        if(match != -1){ openingCounter++; }
 
         if (openingCounter % 2 == 0 && match == 1) {
             score++;
@@ -80,7 +81,7 @@ void CheckMark::keyPressEvent(QKeyEvent *event) {
         } else if (match == 0) {
 
             CurrText->setDefaultTextColor(Qt::red);
-            CurrText->setPlainText("Opennings: " + QString::number(openingCounter / 2));
+            CurrText->setPlainText("Opennings: " + QString::number(openingCounter ));
         }
 //        gameView->setCardHidden();
         if (score >= (sRows * sCols) / 2) {
@@ -90,7 +91,7 @@ void CheckMark::keyPressEvent(QKeyEvent *event) {
             gameView->clearGame();
 //        setGameVisibility(false);
 
-        } else if ((openingCounter / 2) >= 40) {
+        } else if (openingCounter  >= 40) {
             // Player loses
             QTimer::singleShot(1050, [this]() {
                 gameView->clearGame();
