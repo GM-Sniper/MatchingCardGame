@@ -23,14 +23,15 @@ MainWindow::~MainWindow()
 void MainWindow::on_pushButtonLogin_clicked()
 {
     QString username_entered= ui->lineEditUser->text();
-    QString password_entered=ui->lineEditPassword->text();
+    QString password_entered= ui->lineEditPassword->text();
+
 
     for(int i=0; i<usersCount;i++)
     {
         if(username_entered==usernames[i]&& password_entered==password[i])
         {
             hide();
-            GameView* game= new GameView();
+            GameView* game= new GameView(username_entered);
             game->view->show();
             break;
         }else{

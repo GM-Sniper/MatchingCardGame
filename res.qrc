@@ -41,9 +41,11 @@
         <file>Images/image16.png</file>
         <file>Images/image17.png</file>
         <file>Images/image18.png</file>
+        <file>Images/girl.png</file>
     </qresource>
     <qresource prefix="/texts">
         <file>cardsData.txt</file>
         <file>CardsData (2).txt</file>
     </qresource>
+    <qresource prefix="/"/>
 </RCC>

@@ -12,6 +12,7 @@ class CheckMark;
 class GameView
 {
 private:
+    QString x;
     int cardsData[sRows][sCols];
     int lastOpenedRowIndex;
     int lastOpenedColIndex;
@@ -21,17 +22,21 @@ private:
     QGraphicsTextItem* currCardText;
     QGraphicsTextItem* currScoreText;
     QGraphicsTextItem* WinStatusText;
+    //playerName
+    QGraphicsTextItem* playerName;
+
 
 public:
-    GameView();
+    GameView(QString x);
 
 //    explicit GameView(card (*cards)[6]);
 
 
-    bool checkForMatch(int rowIndex, int colIndex);
+    int checkForMatch(int rowIndex, int colIndex);
     QGraphicsScene* scene;
     QGraphicsView* view;
     void setCardHidden();
+    void clearGame();
     void initalizeCard();
     void FlipAllCards();
     CheckMark* checkmark;
@@ -46,7 +51,6 @@ public:
         }
     }
 
-    void clearGame();
 };
 
 #endif // GAMEVIEW_H

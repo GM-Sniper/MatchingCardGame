@@ -9,8 +9,10 @@
 #include <QGraphicsPixmapItem>
 #include "card.h"
 #include "checkmark.h"
+#include "mainwindow.h"
 
-GameView::GameView() :lastOpenedRowIndex(-1),lastOpenedColIndex(-1) {
+GameView::GameView(QString x) :lastOpenedRowIndex(-1),lastOpenedColIndex(-1) {
+    this->x=x;
     scene = new QGraphicsScene;
     view = new QGraphicsView;
     view->setFixedSize(480, 500);
@@ -40,6 +42,23 @@ GameView::GameView() :lastOpenedRowIndex(-1),lastOpenedColIndex(-1) {
 //    statusText->setDefaultTextColor(Qt::green);
     WinStatusText->setPos(200, 190);
     scene->addItem(WinStatusText);
+
+    //set name of player
+
+    QGraphicsTextItem* playerName = new QGraphicsTextItem;
+    playerName->setPlainText(x);
+    playerName->setFont(QFont("times", 12));
+    playerName->setPos(50, 14);
+    scene->addItem(playerName);
+
+    QPixmap playerIcon(":/images/Images/girl.png");
+    playerIcon= playerIcon.scaledToWidth(30);
+    playerIcon= playerIcon.scaledToHeight(30);
+    QGraphicsPixmapItem* Image = new QGraphicsPixmapItem;
+    Image->setPixmap(playerIcon);
+    Image->setPos(18, 14);
+    scene->addItem(Image);
+
 
     checkmark = new CheckMark(this, currCardText,currScoreText,WinStatusText);
     checkmark->setPos(50, 50);
@@ -192,7 +211,7 @@ void GameView::FlipAllCards() {
 }
 
 
-bool GameView::checkForMatch(int rowIndex, int colIndex) {
+int GameView::checkForMatch(int rowIndex, int colIndex) {
     qDebug() << "Card [" << rowIndex << "][" << colIndex << "] initialized with ID: " << Cards[rowIndex][colIndex]->getId();
     if (!(lastOpenedRowIndex == rowIndex && lastOpenedColIndex == colIndex) && !Cards[rowIndex][colIndex]->isMatched() &&!(rowIndex < 0 || rowIndex >= sRows || colIndex < 0 || colIndex >= sCols)) {
         if (lastOpenedRowIndex != -1 && lastOpenedColIndex != -1 && rowIndex != -1 && colIndex != -1) {
@@ -229,12 +248,12 @@ bool GameView::checkForMatch(int rowIndex, int colIndex) {
                     Cards[lastOpenedRowIndex][lastOpenedColIndex]->setMatched(true);
                     Cards[rowIndex][colIndex]->setMatched(true);
 
-
+                    checkmark->showCheckmark();
                     // Reset the last opened indices
                     lastOpenedRowIndex = -1;
                     lastOpenedColIndex = -1;
                 });
-                return true;
+                return 1;
             } else {
                 // No match
                 // Flip both cards back after a delay
@@ -265,9 +284,9 @@ bool GameView::checkForMatch(int rowIndex, int colIndex) {
                     // Reset the last opened indices
                     lastOpenedRowIndex = -1;
                     lastOpenedColIndex = -1;
-
+                    checkmark->showCheckmark();
                 });
-                return false;
+                return 0;
             }
         } else {
             Cards[rowIndex][colIndex]->setState(true);
@@ -275,15 +294,15 @@ bool GameView::checkForMatch(int rowIndex, int colIndex) {
             if (!scene->items().contains(&cardsImages[rowIndex][colIndex])) {
                 scene->addItem(&cardsImages[rowIndex][colIndex]);
             }
-            if (scene->items().contains(&flippedCards[rowIndex][colIndex]) && flippedCards) {
+            if (scene->items().contains(&flippedCards[rowIndex][colIndex])) {
                 scene->removeItem(&flippedCards[rowIndex][colIndex]);
             }
             lastOpenedRowIndex = rowIndex;
             lastOpenedColIndex = colIndex;
-            return false;
+            return 0;
         }
     } else{
-        return false;
+        return -1;
     }
 }
 
