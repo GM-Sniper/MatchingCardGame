@@ -1,4 +1,5 @@
 # Matching Cards Game - Qt Implementation
+
 <img width="355" alt="image" src="https://github.com/GM-Sniper/MatchingCardGame/assets/144553627/69a80818-9d23-4b1e-a4f3-4817acd3e0b9">
 
 <img width="341" alt="image" src="https://github.com/GM-Sniper/MatchingCardGame/assets/144553627/dca6cf5a-f2b1-4cef-9a35-00e717f53403">
