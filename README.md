@@ -63,8 +63,4 @@ Contributions to the game project are welcome! Feel free to fork the repository,
 ## License
 
 This project is licensed under the [MIT License](LICENSE).
-- Winning the game displays a victory message, while exceeding move limits results in a game over.
 
-### Implementation Details
-
-The game is built using the Qt framework, integrating C++ programming for logic and user interface elements. Graphics design is essential for card images and other game assets.
